@@ -1,0 +1,1 @@
+ALTER TABLE users_restaurant ADD COLUMN type_user integer default 1;

@@ -13,6 +13,13 @@ const findRestaurantByEmail = async (email, bool) => {
     return restaurant;
 }
 
+const findRestaurantById = async (id) => {
+    const [result] = await knex(restaurant).where({ id });
+    if (!result) throw new Error("Id do restaurante está inválido.");
+
+    return result;
+}
+
 const createRestaurantService = async ({ name, cnpj, email }) => {
     await findRestaurantByEmail(email, true);
 
@@ -42,13 +49,32 @@ const loginService = async ({ email, name, password: pass }) => {
     if (!userData) throw new Error("Usuário ou senha inválido.");
     if (!await bcrypt.compare(pass, userData.password)) throw new Error("Usuário ou senha inválido.")
 
-    const jwt_ = await jwt.sign(userData, process.env.JWT_PRIVATE, { expiresIn: '2h' });
+    const jwt_ = jwt.sign(userData, process.env.JWT_PRIVATE, { expiresIn: '2h' });
     const { password, ...user } = userData;
     return { ...user, jwt_ };
+}
+
+const addUserService = async ({ id_restaurant, name, password, type_user = 0 }) => {
+    const users = await knex('users_restaurant').where({
+        id_restaurant
+    });
+
+    const existUser = users.find(user => user.name == name);
+    if (existUser) throw new Error("Nome de usuário já existente.");
+
+    const hash = await bcrypt.hash(password, 10);
+
+    await knex("users_restaurant").insert({
+        id_restaurant,
+        name,
+        password: hash,
+        type_user
+    })
 }
 
 module.exports = {
     createRestaurantService,
     findRestaurantByEmail,
-    loginService
+    loginService,
+    addUserService
 }

@@ -1,0 +1,1 @@
+ALTER TABLE users_restaurant ADD CONSTRAINT type_user_value check (type_user >= 0 AND type_user <= 1)
