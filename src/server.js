@@ -7,5 +7,5 @@ app.use(express.json());
 app.use(routes);
 
 app.listen(3000, () => {
-    console.warn("Server initialized")
+    console.log("Server initialized")
 })
