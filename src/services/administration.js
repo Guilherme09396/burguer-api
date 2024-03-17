@@ -14,8 +14,8 @@ const findRestaurantByEmail = async (email, bool) => {
 }
 
 const findRestaurantById = async (id) => {
-    const [result] = await knex(restaurant).where({ id });
-    if (!result) throw new Error("Id do restaurante está inválido.");
+    const [result] = await knex('restaurant').where({ id });
+    if (!result) throw new Error("Id do restaurante inválido.");
 
     return result;
 }
@@ -55,6 +55,8 @@ const loginService = async ({ email, name, password: pass }) => {
 }
 
 const addUserService = async ({ id_restaurant, name, password, type_user = 0 }) => {
+    await findRestaurantById(id_restaurant);
+
     const users = await knex('users_restaurant').where({
         id_restaurant
     });
