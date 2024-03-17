@@ -23,7 +23,6 @@ const login = async (req, res) => {
 const addUser = async (req, res) => {
     try {
         const { id_restaurant } = req.params;
-        if (req.user.type_user == 0) throw new Error("Acesso negado.");
 
         await addUserService({ id_restaurant, ...req.body });
         return res.status(201).json({ message: "Usuário criado com sucesso!" })
